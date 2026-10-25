@@ -20,9 +20,9 @@ cursor.execute("DELETE FROM sqlite_sequence WHERE name='students'")
 
 students = [
     ("24-00316", "Erich Agagdang", "BSIT", 3, "A"),
-    ("24-00111", "JM Abordaje", "BSIT", 3, "A"),
+    ("24-00111", "JM Abordaje", "BSIT", 3, "B"),
     ("24-00357", "Mariel Alada", "BSIT", 3, "A"),
-    ("24-00328", "Jaya Mekaela Almodiel", "BSIT", 3, "A"),
+    ("24-00328", "Jaya Mekaela Almodiel", "BSIT", 3, "B"),
     ("24-00268", "Jessica Ann Balcena", "BSIT", 3, "A")
 ]
 
