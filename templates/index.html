@@ -2,374 +2,740 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student API Integration Dashboard | ISUFST</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISUFST | Student Data Exchange System</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<style>
+:root {
+    --navy: #172b3a;
+    --navy2: #244358;
+    --gold: #d6a84f;
+    --cream: #f5f3ed;
+    --white: #fff;
+    --text: #243342;
+    --muted: #718096;
+    --border: #e1e7ed;
+    --green: #16805d;
+    --red: #c0392b;
+    --blue: #3478a8;
+}
 
-        :root {
-            --navy: #172b3a;
-            --navy-light: #244358;
-            --gold: #d6a84f;
-            --cream: #f5f3ed;
-            --white: #ffffff;
-            --text: #243342;
-            --muted: #718096;
-            --border: #e1e7ed;
-            --green: #16805d;
-            --red: #c0392b;
-        }
+* { box-sizing: border-box; }
 
-        body {
-            margin: 0;
-            background: var(--cream);
-            color: var(--text);
-            font-family: Arial, Helvetica, sans-serif;
-            line-height: 1.5;
-        }
+body {
+    margin: 0;
+    background: var(--cream);
+    color: var(--text);
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.5;
+}
 
-        header {
-            background: var(--navy);
-            color: white;
-            padding: 27px 20px;
-            border-bottom: 4px solid var(--gold);
-        }
+header {
+    background: linear-gradient(120deg, var(--navy), #294b60);
+    color: white;
+    padding: 30px 20px;
+    border-bottom: 4px solid var(--gold);
+}
 
-        .header-content {
-            max-width: 1200px;
-            margin: auto;
-        }
+.header-content, main {
+    max-width: 1250px;
+    margin: auto;
+}
 
-        .eyebrow {
-            color: var(--gold);
-            text-transform: uppercase;
-            font-size: 12px;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
+.eyebrow {
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 12px;
+    font-weight: bold;
+}
 
-        header h1 {
-            margin: 6px 0;
-            font-size: clamp(25px, 4vw, 36px);
-        }
+header h1 {
+    margin: 7px 0;
+    font-size: clamp(25px, 4vw, 37px);
+}
 
-        header p {
-            color: #dbe3eb;
-            margin: 0;
-        }
+header p {
+    color: #dbe3eb;
+    margin: 0;
+}
 
-        main {
-            max-width: 1200px;
-            margin: 28px auto;
-            padding: 0 18px 40px;
-        }
+.header-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+}
 
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 16px;
-            margin-bottom: 22px;
-        }
+.live-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #e7edf2;
+    font-size: 12px;
+}
 
-        .stat-card, .panel {
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            box-shadow: 0 4px 14px rgba(23, 43, 58, 0.05);
-        }
+.live-dot {
+    width: 9px;
+    height: 9px;
+    background: #6cdaa4;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #6cdaa488;
+}
 
-        .stat-card {
-            padding: 20px;
-        }
+main {
+    padding: 26px 18px 40px;
+}
 
-        .stat-card span {
-            display: block;
-            color: var(--muted);
-            font-size: 13px;
-        }
+.section-label {
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.3px;
+    font-size: 11px;
+    font-weight: bold;
+    margin: 25px 0 12px;
+}
 
-        .stat-card strong {
-            display: block;
-            font-size: 30px;
-            margin-top: 5px;
-            color: var(--navy);
-        }
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 15px;
+}
 
-        .panel {
-            padding: 22px;
-            margin-bottom: 22px;
-        }
+.stat-card, .panel {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(23, 43, 58, .045);
+}
 
-        .panel-heading {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-bottom: 18px;
-        }
+.stat-card {
+    padding: 19px;
+    position: relative;
+    overflow: hidden;
+}
 
-        .panel-heading h2 {
-            color: var(--navy);
-            font-size: 21px;
-            margin: 0;
-        }
+.stat-card::after {
+    content: "";
+    position: absolute;
+    width: 5px;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: var(--gold);
+}
 
-        .panel-heading p {
-            margin: 4px 0 0;
-            color: var(--muted);
-            font-size: 13px;
-        }
+.stat-card span {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+}
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 15px;
-        }
+.stat-card strong {
+    display: block;
+    font-size: 30px;
+    color: var(--navy);
+    margin-top: 5px;
+}
 
-        .field {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
+.stat-note {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+}
 
-        .field.full {
-            grid-column: 1 / -1;
-        }
+.panel {
+    padding: 22px;
+    margin-bottom: 20px;
+    min-width: 0;
+}
 
-        label {
-            color: var(--navy);
-            font-weight: bold;
-            font-size: 13px;
-        }
+.panel-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 17px;
+}
 
-        input, select {
-            width: 100%;
-            padding: 11px 12px;
-            border: 1px solid #ccd5de;
-            border-radius: 7px;
-            font: inherit;
-            font-size: 14px;
-            background: white;
-            color: var(--text);
-        }
+.panel-heading h2 {
+    color: var(--navy);
+    font-size: 20px;
+    margin: 0;
+}
 
-        input:focus, select:focus {
-            outline: 2px solid #d6a84f66;
-            border-color: var(--gold);
-        }
+.panel-heading p {
+    color: var(--muted);
+    font-size: 13px;
+    margin: 4px 0 0;
+}
 
-        .actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            align-items: center;
-        }
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    align-items: start;
+}
 
-        button {
-            padding: 10px 14px;
-            border: none;
-            border-radius: 7px;
-            background: var(--navy);
-            color: white;
-            font-weight: bold;
-            font-size: 13px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
+.dashboard-grid > .panel {
+    margin-bottom: 0;
+}
 
-        button:hover {
-            background: var(--navy-light);
-        }
+.connection-list {
+    display: grid;
+    gap: 12px;
+}
 
-        button.gold {
-            background: var(--gold);
-            color: #202a32;
-        }
+.connection-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 13px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+}
 
-        button.gold:hover {
-            background: #c7983e;
-        }
+.connection-name {
+    color: var(--navy);
+    font-weight: bold;
+    font-size: 13px;
+}
 
-        button.danger {
-            background: var(--red);
-        }
+.connection-detail {
+    color: var(--muted);
+    font-size: 11px;
+    overflow-wrap: anywhere;
+    margin-top: 3px;
+}
 
-        button.secondary {
-            background: #e8edf2;
-            color: var(--navy);
-        }
+.status {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    white-space: nowrap;
+    background: #edf0f3;
+    color: #596675;
+}
 
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
+.status.online {
+    color: #176541;
+    background: #e1f4ea;
+}
 
-        .table-wrap {
-            width: 100%;
-            overflow-x: auto;
-        }
+.status.offline {
+    color: #9f2d24;
+    background: #fff0ef;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 700px;
-        }
+.status.checking {
+    color: #835b0d;
+    background: #fff0d4;
+}
 
-        th, td {
-            text-align: left;
-            padding: 12px 10px;
-            border-bottom: 1px solid var(--border);
-            font-size: 13px;
-        }
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+}
 
-        th {
-            background: #f1f4f7;
-            color: var(--navy);
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-        }
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
 
-        td {
-            vertical-align: middle;
-        }
+.field.full {
+    grid-column: 1 / -1;
+}
 
-        .badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 20px;
-            background: #e9eef3;
-            color: var(--navy);
-            font-size: 11px;
-            font-weight: bold;
-            white-space: nowrap;
-        }
+label {
+    color: var(--navy);
+    font-size: 13px;
+    font-weight: bold;
+}
 
-        .badge.local {
-            background: #e1f4ea;
-            color: #176541;
-        }
+input, select {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #ccd5de;
+    border-radius: 7px;
+    font: inherit;
+    font-size: 14px;
+    color: var(--text);
+    background: white;
+}
 
-        .badge.partner {
-            background: #fff0d4;
-            color: #835b0d;
-        }
+input:focus, select:focus {
+    outline: 2px solid #d6a84f66;
+    border-color: var(--gold);
+}
 
-        .notice {
-            padding: 12px 14px;
-            border-radius: 7px;
-            background: #edf3f8;
-            border: 1px solid #d8e4ed;
-            margin-bottom: 15px;
-            font-size: 13px;
-            overflow-wrap: anywhere;
-        }
+.search-field {
+    margin-bottom: 16px;
+}
 
-        .notice.success {
-            background: #e7f6ee;
-            border-color: #b8e4ca;
-            color: #176541;
-        }
+.search-field input {
+    background: #fbfcfd;
+    padding: 13px;
+}
 
-        .notice.error {
-            background: #fff0ef;
-            border-color: #f0c4c0;
-            color: #9f2d24;
-        }
+.hint {
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 3px;
+}
 
-        .empty {
-            padding: 24px;
-            color: var(--muted);
-            text-align: center;
-        }
+.actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
 
-        .api-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
+button {
+    padding: 10px 14px;
+    border: none;
+    border-radius: 7px;
+    background: var(--navy);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background .2s, transform .2s;
+}
 
-        pre {
-            background: #101d28;
-            color: #dce8f2;
-            padding: 16px;
-            border-radius: 8px;
-            overflow-x: auto;
-            min-height: 60px;
-            white-space: pre-wrap;
-            overflow-wrap: anywhere;
-            font-size: 13px;
-        }
+button:hover {
+    background: var(--navy2);
+    transform: translateY(-1px);
+}
 
-        footer {
-            text-align: center;
-            color: var(--muted);
-            padding: 10px 18px 30px;
-            font-size: 12px;
-        }
+button.gold {
+    background: var(--gold);
+    color: #202a32;
+}
 
-        @media (max-width: 650px) {
-            .stats {
-                grid-template-columns: 1fr;
-            }
+button.gold:hover { background: #c7983e; }
 
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
+button.danger { background: var(--red); }
 
-            .field.full {
-                grid-column: auto;
-            }
+button.danger:hover { background: #a93226; }
 
-            .panel {
-                padding: 16px;
-            }
-        }
-    </style>
+button.secondary {
+    background: #e8edf2;
+    color: var(--navy);
+}
+
+button.secondary:hover { background: #d9e1e9; }
+
+button:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 680px;
+}
+
+th, td {
+    text-align: left;
+    padding: 12px 10px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    vertical-align: middle;
+}
+
+th {
+    background: #f1f4f7;
+    color: var(--navy);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 20px;
+    background: #e9eef3;
+    color: var(--navy);
+    font-size: 10px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.badge.local {
+    background: #e1f4ea;
+    color: #176541;
+}
+
+.badge.partner {
+    background: #fff0d4;
+    color: #835b0d;
+}
+
+.notice {
+    padding: 12px 14px;
+    border-radius: 7px;
+    background: #edf3f8;
+    border: 1px solid #d8e4ed;
+    margin-bottom: 15px;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+.notice.success {
+    background: #e7f6ee;
+    border-color: #b8e4ca;
+    color: #176541;
+}
+
+.notice.error {
+    background: #fff0ef;
+    border-color: #f0c4c0;
+    color: #9f2d24;
+}
+
+.empty {
+    padding: 24px;
+    text-align: center;
+    color: var(--muted);
+}
+
+.spotlight {
+    background: linear-gradient(135deg, #172b3a, #2b4c60);
+    color: white;
+    border-radius: 10px;
+    padding: 22px;
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+    gap: 17px;
+}
+
+.avatar {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 23px;
+    font-weight: bold;
+    border: 3px solid #ffffff55;
+}
+
+.spotlight h3 {
+    margin: 0 0 5px;
+    font-size: 19px;
+    overflow-wrap: anywhere;
+}
+
+.spotlight p {
+    margin: 3px 0;
+    color: #dbe3eb;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.spotlight .eyebrow {
+    margin-bottom: 7px;
+    display: block;
+}
+
+.analytics-list {
+    display: grid;
+    gap: 15px;
+}
+
+.analytics-title {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 12px;
+    margin-bottom: 6px;
+}
+
+.analytics-title strong { color: var(--navy); }
+
+.bar-track {
+    height: 9px;
+    border-radius: 10px;
+    background: #edf0f3;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    width: 0;
+    border-radius: 10px;
+    background: var(--gold);
+    transition: width .3s;
+}
+
+.year-bar { background: var(--blue); }
+
+.activity-list {
+    display: grid;
+    gap: 0;
+}
+
+.activity-item {
+    display: grid;
+    grid-template-columns: 12px 1fr;
+    gap: 11px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.activity-item:last-child { border-bottom: none; }
+
+.activity-dot {
+    width: 9px;
+    height: 9px;
+    background: var(--gold);
+    border-radius: 50%;
+    margin-top: 5px;
+}
+
+.activity-title {
+    color: var(--navy);
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.activity-meta {
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 3px;
+    overflow-wrap: anywhere;
+}
+
+.history-status {
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.history-status.success { color: var(--green); }
+.history-status.error { color: var(--red); }
+
+footer {
+    text-align: center;
+    color: var(--muted);
+    padding: 10px 18px 30px;
+    font-size: 12px;
+}
+
+@media (max-width: 850px) {
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .dashboard-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 550px) {
+    main { padding: 20px 12px 30px; }
+    .stats { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .stat-card { padding: 14px; }
+    .stat-card strong { font-size: 25px; }
+    .panel { padding: 15px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .field.full { grid-column: auto; }
+    .spotlight { padding: 16px; }
+    .avatar { width: 55px; height: 55px; }
+}
+</style>
 </head>
 
 <body>
+
 <header>
     <div class="header-content">
         <div class="eyebrow">ISUFST · Laboratory Activity 9</div>
-        <h1>Student API Integration Dashboard</h1>
-        <p>Manage local student records and exchange data with another student’s API.</p>
+        <h1>Student Data Exchange System</h1>
+        <p>A connected student records dashboard with analytics and API monitoring.</p>
+
+        <div class="header-bottom">
+            <div class="live-label">
+                <span class="live-dot"></span>
+                <span>API Integration Workspace</span>
+            </div>
+
+            <div class="actions">
+                <button type="button" class="gold" onclick="checkConnections()">
+                    Check API Connections
+                </button>
+            </div>
+        </div>
     </div>
 </header>
 
 <main>
+
+    <div id="globalMessage" class="notice" hidden></div>
+
+    <div class="section-label">System overview</div>
+
     <section class="stats">
         <div class="stat-card">
             <span>My Database Records</span>
             <strong id="localCount">0</strong>
+            <div class="stat-note">Records in your database</div>
         </div>
+
         <div class="stat-card">
-            <span>Imported Partner Records</span>
+            <span>Imported Records</span>
             <strong id="importedCount">0</strong>
+            <div class="stat-note">Saved from the partner API</div>
         </div>
+
         <div class="stat-card">
             <span>Partner API Records</span>
-            <strong id="partnerCount">0</strong>
+            <strong id="partnerCount">—</strong>
+            <div class="stat-note">Records returned by your proxy</div>
+        </div>
+
+        <div class="stat-card">
+            <span>Exchange Attempts</span>
+            <strong id="exchangeCount">0</strong>
+            <div class="stat-note">Tracked during this session</div>
         </div>
     </section>
 
-    <div id="globalMessage" class="notice" hidden></div>
+    <div class="section-label">Monitoring and insights</div>
 
-    <!-- LOCAL DATABASE RECORDS -->
+    <div class="dashboard-grid">
+
+        <!-- API MONITOR -->
+        <section class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>API Connection Monitor</h2>
+                    <p>Check the connection to both systems.</p>
+                </div>
+            </div>
+
+            <div class="connection-list">
+                <div class="connection-item">
+                    <div>
+                        <div class="connection-name">My Flask API</div>
+                        <div class="connection-detail">
+                            /api/students
+                        </div>
+                    </div>
+                    <span id="localApiStatus" class="status checking">
+                        Not checked
+                    </span>
+                </div>
+
+                <div class="connection-item">
+                    <div>
+                        <div class="connection-name">Classmate's API</div>
+                        <div class="connection-detail">
+                            /partner-records proxy
+                        </div>
+                    </div>
+                    <span id="partnerApiStatus" class="status checking">
+                        Not checked
+                    </span>
+                </div>
+            </div>
+
+            <p class="hint" id="lastChecked">
+                Select Check API Connections to run a test.
+            </p>
+        </section>
+
+        <!-- STUDENT SPOTLIGHT -->
+        <section class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>Student Spotlight</h2>
+                    <p>A randomly selected student from your database.</p>
+                </div>
+                <button type="button" class="secondary" onclick="chooseSpotlight()">
+                    Random Student
+                </button>
+            </div>
+
+            <div class="spotlight" id="spotlight">
+                <div class="avatar">?</div>
+                <div>
+                    <span class="eyebrow">Featured student</span>
+                    <h3>No student records yet</h3>
+                    <p>Add or import a student to activate the spotlight.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ANALYTICS -->
+        <section class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>Program Analytics</h2>
+                    <p>Distribution of your local student records.</p>
+                </div>
+            </div>
+
+            <div class="analytics-list" id="programAnalytics">
+                <p class="empty">Analytics will appear when records are loaded.</p>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>Year-Level Analytics</h2>
+                    <p>Number of students in each year level.</p>
+                </div>
+            </div>
+
+            <div class="analytics-list" id="yearAnalytics">
+                <p class="empty">Analytics will appear when records are loaded.</p>
+            </div>
+        </section>
+
+    </div>
+
+    <div class="section-label">Student management</div>
+
+    <!-- LOCAL RECORDS -->
     <section class="panel">
         <div class="panel-heading">
             <div>
                 <h2>My Student Records</h2>
-                <p>Records stored in your own SQLite database.</p>
+                <p>Manage records stored in your SQLite database.</p>
             </div>
+
             <button type="button" class="gold" onclick="loadLocalStudents()">
                 Refresh Records
             </button>
+        </div>
+
+        <div class="field search-field">
+            <label for="localSearch">Search My Student Records</label>
+            <input
+                type="search"
+                id="localSearch"
+                placeholder="Search student number, name, program, year, or section..."
+                autocomplete="off"
+                oninput="renderLocalStudents()"
+            >
         </div>
 
         <div class="table-wrap">
@@ -404,6 +770,7 @@
 
         <form id="addStudentForm">
             <div class="form-grid">
+
                 <div class="field">
                     <label for="student_id">Student Number</label>
                     <input id="student_id" name="student_id"
@@ -451,17 +818,21 @@
                         <button type="reset" class="secondary">Clear Form</button>
                     </div>
                 </div>
+
             </div>
         </form>
     </section>
 
-    <!-- PARTNER API RECORDS -->
+    <div class="section-label">System-to-system integration</div>
+
+    <!-- PARTNER RECORDS -->
     <section class="panel">
         <div class="panel-heading">
             <div>
                 <h2>Classmate's API Records</h2>
-                <p>Retrieve student records from the partner's deployed Flask API.</p>
+                <p>Retrieve records from the partner's deployed Flask API.</p>
             </div>
+
             <button type="button" onclick="loadPartnerStudents()">
                 Retrieve Partner Records
             </button>
@@ -469,10 +840,21 @@
 
         <div class="notice">
             <strong>Partner API:</strong>
-            <span id="partnerUrl">https://abordaje-jm.onrender.com</span>
+            <span id="partnerUrl">https://kleinjasperagrabio.onrender.com</span>
         </div>
 
         <div id="partnerMessage" class="notice" hidden></div>
+
+        <div class="field search-field">
+            <label for="partnerSearch">Search Partner Records</label>
+            <input
+                type="search"
+                id="partnerSearch"
+                placeholder="Search partner student number, name, program, year, or section..."
+                autocomplete="off"
+                oninput="renderPartnerStudents()"
+            >
+        </div>
 
         <div class="table-wrap">
             <table>
@@ -487,27 +869,26 @@
                     </tr>
                 </thead>
                 <tbody id="partnerStudentsBody">
-                    <tr>
-                        <td colspan="6" class="empty">
-                            Click "Retrieve Partner Records" to load records.
-                        </td>
-                    </tr>
+                    <tr><td colspan="6" class="empty">
+                        Click Retrieve Partner Records to load records.
+                    </td></tr>
                 </tbody>
             </table>
         </div>
     </section>
 
-    <!-- SEND TO PARTNER -->
+    <!-- SEND STUDENT -->
     <section class="panel">
         <div class="panel-heading">
             <div>
                 <h2>Send a Student to Partner API</h2>
-                <p>Submit a student record to your classmate's API.</p>
+                <p>Submit a student record through your Flask integration route.</p>
             </div>
         </div>
 
         <form id="sendStudentForm">
             <div class="form-grid">
+
                 <div class="field">
                     <label for="send_student_id">Student Number</label>
                     <input id="send_student_id" required
@@ -551,110 +932,579 @@
                 <div class="field full">
                     <button type="submit" class="gold">Send to Partner API</button>
                 </div>
+
             </div>
         </form>
     </section>
+
+    <!-- ACTIVITY TIMELINE -->
+    <div class="section-label">Audit and exchange activity</div>
+
+    <div class="dashboard-grid">
+
+        <section class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>Activity Timeline</h2>
+                    <p>Recent actions performed in this browser session.</p>
+                </div>
+
+                <button type="button" class="secondary" onclick="clearActivities()">
+                    Clear Timeline
+                </button>
+            </div>
+
+            <div id="activityTimeline" class="activity-list">
+                <p class="empty">Your activity will appear here.</p>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>API Exchange History</h2>
+                    <p>Results of send and import attempts in this session.</p>
+                </div>
+
+                <button type="button" class="secondary" onclick="clearExchangeHistory()">
+                    Clear History
+                </button>
+            </div>
+
+            <div class="table-wrap">
+                <table style="min-width: 350px;">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Action</th>
+                            <th>Student</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody id="exchangeHistoryBody">
+                        <tr><td colspan="4" class="empty">
+                            No exchange attempts yet.
+                        </td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+
 </main>
 
 <footer>
-    Student API Integration Dashboard · Flask · SQLite · REST API
+    ISUFST Student Data Exchange System · Flask · SQLite · REST API
+    <br>
+    Student records and API exchange workspace
 </footer>
 
 <script>
-    const PROGRAMS = ["BSIT", "BSED", "BSA", "BSHM", "BSOffAd"];
+"use strict";
 
-    function escapeHTML(value) {
-        return String(value ?? "").replace(/[&<>"']/g, function (char) {
+const PROGRAMS = ["BSIT", "BSED", "BSA", "BSHM", "BSOffAd"];
+const PARTNER_URL = "https://kleinjasperagrabio.onrender.com";
+
+let localStudentsCache = [];
+let partnerStudentsCache = [];
+let activities = [];
+let exchangeHistory = [];
+let lastSpotlightId = null;
+let nextActivityId = 1;
+
+document.getElementById("partnerUrl").textContent = PARTNER_URL;
+
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+    })[char]);
+}
+
+function showMessage(message, type = "success") {
+    const box = document.getElementById("globalMessage");
+    box.textContent = message;
+    box.className = "notice " + type;
+    box.hidden = false;
+}
+
+function showPartnerMessage(message, type = "success") {
+    const box = document.getElementById("partnerMessage");
+    box.textContent = message;
+    box.className = "notice " + type;
+    box.hidden = false;
+}
+
+async function fetchJSON(url, options = {}) {
+    const response = await fetch(url, options);
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+        throw new Error(
+            data.message ||
+            data.error ||
+            `Request failed with HTTP ${response.status}`
+        );
+    }
+
+    return data;
+}
+
+function sourceBadge(source) {
+    const value = source || "Local";
+    const cssClass = value === "Classmate API" ? "partner" : "local";
+
+    return `<span class="badge ${cssClass}">${escapeHTML(value)}</span>`;
+}
+
+function formatTime(date = new Date()) {
+    return date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+    });
+}
+
+function addActivity(title, detail = "") {
+    activities.unshift({
+        id: nextActivityId++,
+        title,
+        detail,
+        time: formatTime()
+    });
+
+    activities = activities.slice(0, 30);
+    renderActivities();
+}
+
+function recordExchange(action, student, success, detail = "") {
+    exchangeHistory.unshift({
+        time: formatTime(),
+        action,
+        student: student || "Unknown",
+        success,
+        detail
+    });
+
+    exchangeHistory = exchangeHistory.slice(0, 50);
+
+    document.getElementById("exchangeCount").textContent =
+        exchangeHistory.length;
+
+    renderExchangeHistory();
+}
+
+function renderActivities() {
+    const container = document.getElementById("activityTimeline");
+
+    if (!activities.length) {
+        container.innerHTML =
+            '<p class="empty">Your activity will appear here.</p>';
+        return;
+    }
+
+    container.innerHTML = activities.map(item => `
+        <div class="activity-item">
+            <span class="activity-dot"></span>
+            <div>
+                <div class="activity-title">${escapeHTML(item.title)}</div>
+                <div class="activity-meta">
+                    ${escapeHTML(item.detail)} · ${escapeHTML(item.time)}
+                </div>
+            </div>
+        </div>
+    `).join("");
+}
+
+function renderExchangeHistory() {
+    const body = document.getElementById("exchangeHistoryBody");
+
+    if (!exchangeHistory.length) {
+        body.innerHTML = `
+            <tr><td colspan="4" class="empty">
+                No exchange attempts yet.
+            </td></tr>
+        `;
+        return;
+    }
+
+    body.innerHTML = exchangeHistory.map(item => `
+        <tr>
+            <td>${escapeHTML(item.time)}</td>
+            <td>${escapeHTML(item.action)}</td>
+            <td>${escapeHTML(item.student)}</td>
+            <td>
+                <span class="history-status ${item.success ? "success" : "error"}">
+                    ${item.success ? "SUCCESS" : "FAILED"}
+                </span>
+                ${item.detail ? `<div class="hint">${escapeHTML(item.detail)}</div>` : ""}
+            </td>
+        </tr>
+    `).join("");
+}
+
+function clearActivities() {
+    if (!confirm("Clear the activity timeline for this session?")) return;
+    activities = [];
+    renderActivities();
+}
+
+function clearExchangeHistory() {
+    if (!confirm("Clear the exchange history for this session?")) return;
+
+    exchangeHistory = [];
+    document.getElementById("exchangeCount").textContent = "0";
+    renderExchangeHistory();
+}
+
+function renderLocalStudents() {
+    const body = document.getElementById("localStudentsBody");
+    const query = document.getElementById("localSearch")
+        .value.trim().toLowerCase();
+
+    const filtered = localStudentsCache.filter(student => {
+        const searchable = [
+            student.id,
+            student.student_id,
+            student.name,
+            student.program,
+            student.year,
+            student.section,
+            student.source
+        ].join(" ").toLowerCase();
+
+        return searchable.includes(query);
+    });
+
+    if (!filtered.length) {
+        body.innerHTML = `
+            <tr>
+                <td colspan="8" class="empty">
+                    ${localStudentsCache.length
+                        ? "No records match your search."
+                        : "No student records found."}
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    body.innerHTML = filtered.map(student => {
+        const id = Number(student.id);
+
+        return `
+            <tr>
+                <td>${escapeHTML(student.id)}</td>
+                <td>${escapeHTML(student.student_id)}</td>
+                <td>${escapeHTML(student.name)}</td>
+                <td>${escapeHTML(student.program)}</td>
+                <td>${escapeHTML(student.year)}</td>
+                <td>${escapeHTML(student.section)}</td>
+                <td>${sourceBadge(student.source)}</td>
+                <td>
+                    <div class="actions">
+                        <button type="button" class="secondary"
+                            onclick="viewStudent(${id})">View</button>
+                        <button type="button" class="danger"
+                            onclick="deleteStudent(${id})">Delete</button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }).join("");
+}
+
+async function loadLocalStudents() {
+    const body = document.getElementById("localStudentsBody");
+
+    body.innerHTML = `
+        <tr><td colspan="8" class="empty">Loading records...</td></tr>
+    `;
+
+    try {
+        const data = await fetchJSON("/api/students");
+        localStudentsCache = Array.isArray(data.students)
+            ? data.students
+            : [];
+
+        document.getElementById("localCount").textContent =
+            localStudentsCache.length;
+
+        document.getElementById("importedCount").textContent =
+            localStudentsCache.filter(
+                student => student.source === "Classmate API"
+            ).length;
+
+        renderLocalStudents();
+        renderAnalytics();
+        updateSpotlightIfNeeded();
+
+        setConnectionStatus("localApiStatus", true, "Online");
+
+        addActivity(
+            "Local records refreshed",
+            `${localStudentsCache.length} record(s) loaded`
+        );
+
+    } catch (error) {
+        body.innerHTML = `
+            <tr><td colspan="8" class="empty">
+                ${escapeHTML(error.message)}
+            </td></tr>
+        `;
+
+        setConnectionStatus("localApiStatus", false, "Offline");
+        showMessage(
+            "Unable to load local student records: " + error.message,
+            "error"
+        );
+
+        addActivity("Local API request failed", error.message);
+    }
+}
+
+function renderAnalytics() {
+    const programContainer = document.getElementById("programAnalytics");
+    const yearContainer = document.getElementById("yearAnalytics");
+
+    const total = localStudentsCache.length;
+
+    if (!total) {
+        programContainer.innerHTML =
+            '<p class="empty">Add or import students to see program statistics.</p>';
+
+        yearContainer.innerHTML =
+            '<p class="empty">Add or import students to see year-level statistics.</p>';
+
+        return;
+    }
+
+    const programCounts = {};
+    const yearCounts = {};
+
+    localStudentsCache.forEach(student => {
+        const program = student.program || "Unknown";
+        const year = String(student.year || "Unknown");
+
+        programCounts[program] = (programCounts[program] || 0) + 1;
+        yearCounts[year] = (yearCounts[year] || 0) + 1;
+    });
+
+    programContainer.innerHTML = Object.entries(programCounts)
+        .sort((a, b) => b[1] - a[1])
+        .map(([name, count]) => `
+            <div>
+                <div class="analytics-title">
+                    <span>${escapeHTML(name)}</span>
+                    <strong>${count} (${Math.round(count / total * 100)}%)</strong>
+                </div>
+                <div class="bar-track">
+                    <div class="bar-fill"
+                        style="width:${count / total * 100}%"></div>
+                </div>
+            </div>
+        `).join("");
+
+    const yearOrder = ["1", "2", "3", "4", "5", "6", "Unknown"];
+
+    yearContainer.innerHTML = yearOrder
+        .filter(year => yearCounts[year])
+        .map(year => {
+            const count = yearCounts[year];
+            const label = year === "Unknown"
+                ? "Unknown year"
+                : `${year}${year === "1" ? "st" : year === "2" ? "nd" : year === "3" ? "rd" : "th"} Year`;
+
+            return `
+                <div>
+                    <div class="analytics-title">
+                        <span>${escapeHTML(label)}</span>
+                        <strong>${count} (${Math.round(count / total * 100)}%)</strong>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill year-bar"
+                            style="width:${count / total * 100}%"></div>
+                    </div>
+                </div>
+            `;
+        }).join("");
+}
+
+function chooseSpotlight() {
+    if (!localStudentsCache.length) {
+        showMessage("Add or import a student before using Student Spotlight.", "error");
+        return;
+    }
+
+    let candidates = localStudentsCache;
+
+    if (candidates.length > 1 && lastSpotlightId !== null) {
+        const alternatives = candidates.filter(
+            student => String(student.id) !== String(lastSpotlightId)
+        );
+
+        if (alternatives.length) candidates = alternatives;
+    }
+
+    const student = candidates[
+        Math.floor(Math.random() * candidates.length)
+    ];
+
+    lastSpotlightId = student.id;
+
+    const initials = String(student.name || "?")
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map(part => part.charAt(0).toUpperCase())
+        .join("");
+
+    document.getElementById("spotlight").innerHTML = `
+        <div class="avatar">${escapeHTML(initials || "?")}</div>
+        <div>
+            <span class="eyebrow">Featured student</span>
+            <h3>${escapeHTML(student.name || "Unnamed student")}</h3>
+            <p>Student No.: ${escapeHTML(student.student_id || "N/A")}</p>
+            <p>${escapeHTML(student.program || "N/A")} · Year ${escapeHTML(student.year || "N/A")}</p>
+            <p>Section ${escapeHTML(student.section || "N/A")}</p>
+        </div>
+    `;
+
+    addActivity("Student spotlight changed", student.name || "Unnamed student");
+}
+
+function updateSpotlightIfNeeded() {
+    if (!localStudentsCache.length) {
+        document.getElementById("spotlight").innerHTML = `
+            <div class="avatar">?</div>
+            <div>
+                <span class="eyebrow">Featured student</span>
+                <h3>No student records yet</h3>
+                <p>Add or import a student to activate the spotlight.</p>
+            </div>
+        `;
+
+        lastSpotlightId = null;
+        return;
+    }
+
+    const currentStillExists = localStudentsCache.some(
+        student => String(student.id) === String(lastSpotlightId)
+    );
+
+    if (!currentStillExists) chooseSpotlightWithoutActivity();
+}
+
+function chooseSpotlightWithoutActivity() {
+    if (!localStudentsCache.length) return;
+
+    const student = localStudentsCache[
+        Math.floor(Math.random() * localStudentsCache.length)
+    ];
+
+    lastSpotlightId = student.id;
+
+    const initials = String(student.name || "?")
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map(part => part.charAt(0).toUpperCase())
+        .join("");
+
+    document.getElementById("spotlight").innerHTML = `
+        <div class="avatar">${escapeHTML(initials || "?")}</div>
+        <div>
+            <span class="eyebrow">Featured student</span>
+            <h3>${escapeHTML(student.name || "Unnamed student")}</h3>
+            <p>Student No.: ${escapeHTML(student.student_id || "N/A")}</p>
+            <p>${escapeHTML(student.program || "N/A")} · Year ${escapeHTML(student.year || "N/A")}</p>
+            <p>Section ${escapeHTML(student.section || "N/A")}</p>
+        </div>
+    `;
+}
+
+function setConnectionStatus(elementId, online, label) {
+    const element = document.getElementById(elementId);
+
+    element.textContent = label;
+    element.className = "status " + (
+        label === "Checking..."
+            ? "checking"
+            : online ? "online" : "offline"
+    );
+}
+
+async function checkConnections() {
+    setConnectionStatus("localApiStatus", false, "Checking...");
+    setConnectionStatus("partnerApiStatus", false, "Checking...");
+
+    document.getElementById("lastChecked").textContent =
+        "Checking API endpoints...";
+
+    const localCheck = fetchJSON("/api/students")
+        .then(data => {
+            setConnectionStatus("localApiStatus", true, "Online");
             return {
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                '"': "&quot;",
-                "'": "&#039;"
-            }[char];
+                ok: true,
+                count: Array.isArray(data.students)
+                    ? data.students.length
+                    : 0
+            };
+        })
+        .catch(error => {
+            setConnectionStatus("localApiStatus", false, "Offline");
+            return { ok: false, error: error.message };
         });
-    }
 
-    function showMessage(message, type = "success") {
-        const box = document.getElementById("globalMessage");
-        box.textContent = message;
-        box.className = "notice " + type;
-        box.hidden = false;
-
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    function showPartnerMessage(message, type = "success") {
-        const box = document.getElementById("partnerMessage");
-        box.textContent = message;
-        box.className = "notice " + type;
-        box.hidden = false;
-    }
-
-    async function fetchJSON(url, options = {}) {
-        const response = await fetch(url, options);
-        const data = await response.json().catch(() => ({}));
-
-        if (!response.ok) {
-            throw new Error(data.message || data.error ||
-                `Request failed with HTTP ${response.status}`);
-        }
-
-        return data;
-    }
-
-    function sourceBadge(source) {
-        const value = source || "Local";
-        const cssClass = value === "Classmate API"
-            ? "partner"
-            : "local";
-
-        return `<span class="badge ${cssClass}">${escapeHTML(value)}</span>`;
-    }
-
-    async function loadLocalStudents() {
-        const body = document.getElementById("localStudentsBody");
-        body.innerHTML = '<tr><td colspan="8" class="empty">Loading records...</td></tr>';
-
-        try {
-            const data = await fetchJSON("/api/students");
-            const students = data.students || [];
-
-            document.getElementById("localCount").textContent = students.length;
-            document.getElementById("importedCount").textContent =
-                students.filter(student => student.source === "Classmate API").length;
-
-            if (students.length === 0) {
-                body.innerHTML = '<tr><td colspan="8" class="empty">No student records found.</td></tr>';
-                return;
+    const partnerCheck = fetchJSON("/partner-records")
+        .then(data => {
+            if (!Array.isArray(data.students)) {
+                throw new Error("Unexpected partner response format");
             }
 
-            body.innerHTML = students.map(student => `
-                <tr>
-                    <td>${escapeHTML(student.id)}</td>
-                    <td>${escapeHTML(student.student_id)}</td>
-                    <td>${escapeHTML(student.name)}</td>
-                    <td>${escapeHTML(student.program)}</td>
-                    <td>${escapeHTML(student.year)}</td>
-                    <td>${escapeHTML(student.section)}</td>
-                    <td>${sourceBadge(student.source)}</td>
-                    <td>
-                        <div class="actions">
-                            <button type="button" class="secondary"
-                                onclick="viewStudent(${Number(student.id)})">View</button>
-                            <button type="button" class="danger"
-                                onclick="deleteStudent(${Number(student.id)})">Delete</button>
-                        </div>
-                    </td>
-                </tr>
-            `).join("");
-        } catch (error) {
-            body.innerHTML = `<tr><td colspan="8" class="empty">${escapeHTML(error.message)}</td></tr>`;
-            showMessage("Unable to load your local student records: " + error.message, "error");
-        }
-    }
+            setConnectionStatus("partnerApiStatus", true, "Online");
+            return { ok: true, count: data.students.length };
+        })
+        .catch(error => {
+            setConnectionStatus("partnerApiStatus", false, "Offline");
+            return { ok: false, error: error.message };
+        });
 
-    document.getElementById("addStudentForm").addEventListener("submit", async function (event) {
+    const [local, partner] = await Promise.all([
+        localCheck,
+        partnerCheck
+    ]);
+
+    document.getElementById("lastChecked").textContent =
+        "Last checked: " + new Date().toLocaleString();
+
+    addActivity(
+        "API connection check completed",
+        `Local: ${local.ok ? "Online" : "Offline"}; Partner: ${partner.ok ? "Online" : "Offline"}`
+    );
+
+    if (local.ok && partner.ok) {
+        showMessage("Both API routes responded successfully.", "success");
+    } else if (local.ok) {
+        showMessage(
+            "Your local API is online, but the partner proxy failed: " +
+            (partner.error || "Check the partner API."),
+            "error"
+        );
+    } else {
+        showMessage(
+            "The local API check failed. Check your Flask application and Render logs.",
+            "error"
+        );
+    }
+}
+
+document.getElementById("addStudentForm")
+    .addEventListener("submit", async function(event) {
         event.preventDefault();
 
         const student = {
@@ -674,151 +1524,271 @@
             });
 
             showMessage(result.message || "Student added successfully.");
+
+            addActivity("Student added", student.name);
+            recordExchange("Local add", student.student_id, true);
+
             this.reset();
             document.getElementById("program").value = "BSIT";
             document.getElementById("year").value = "3";
+
             await loadLocalStudents();
+
         } catch (error) {
             showMessage(error.message, "error");
+            addActivity("Student add failed", error.message);
+            recordExchange("Local add", student.student_id, false, error.message);
         }
     });
 
-    async function viewStudent(id) {
-        try {
-            const result = await fetchJSON(`/api/students/${id}`);
-            const student = result.student;
+async function viewStudent(id) {
+    try {
+        const result = await fetchJSON(`/api/students/${id}`);
+        const student = result.student;
 
-            alert(
-                "STUDENT DETAILS\n\n" +
-                "Database ID: " + student.id + "\n" +
-                "Student Number: " + student.student_id + "\n" +
-                "Name: " + student.name + "\n" +
-                "Program: " + student.program + "\n" +
-                "Year: " + student.year + "\n" +
-                "Section: " + student.section + "\n" +
-                "Source: " + student.source
-            );
-        } catch (error) {
-            showMessage(error.message, "error");
-        }
+        if (!student) throw new Error("Student record was not returned.");
+
+        alert(
+            "STUDENT DETAILS\n\n" +
+            "Database ID: " + (student.id ?? "") + "\n" +
+            "Student Number: " + (student.student_id ?? "") + "\n" +
+            "Name: " + (student.name ?? "") + "\n" +
+            "Program: " + (student.program ?? "") + "\n" +
+            "Year: " + (student.year ?? "") + "\n" +
+            "Section: " + (student.section ?? "") + "\n" +
+            "Source: " + (student.source ?? "Local")
+        );
+
+        addActivity("Student record viewed", student.name || student.student_id);
+
+    } catch (error) {
+        showMessage(error.message, "error");
+    }
+}
+
+async function deleteStudent(id) {
+    const student = localStudentsCache.find(
+        item => Number(item.id) === Number(id)
+    );
+
+    if (!confirm("Are you sure you want to delete this student record?")) {
+        return;
     }
 
-    async function deleteStudent(id) {
-        if (!confirm("Are you sure you want to delete this student record?")) {
-            return;
-        }
+    try {
+        const result = await fetchJSON(`/api/students/${id}`, {
+            method: "DELETE"
+        });
 
-        try {
-            const result = await fetchJSON(`/api/students/${id}`, {
-                method: "DELETE"
-            });
+        showMessage(result.message || "Student deleted successfully.");
 
-            showMessage(result.message || "Student deleted successfully.");
-            await loadLocalStudents();
-        } catch (error) {
-            showMessage(error.message, "error");
-        }
+        addActivity(
+            "Student deleted",
+            student ? student.name : "Record ID " + id
+        );
+
+        recordExchange(
+            "Local delete",
+            student ? student.student_id : String(id),
+            true
+        );
+
+        await loadLocalStudents();
+
+    } catch (error) {
+        showMessage(error.message, "error");
+        addActivity("Student delete failed", error.message);
+        recordExchange("Local delete", String(id), false, error.message);
+    }
+}
+
+function normalizePartnerStudent(student) {
+    return {
+        student_id: String(student.student_id ?? student.id ?? "").trim(),
+        name: String(student.name ?? student.student_name ?? "").trim(),
+        program: String(student.program ?? "BSIT").trim(),
+        year: Number(student.year ?? 1),
+        section: String(student.section ?? "A").trim()
+    };
+}
+
+function renderPartnerStudents() {
+    const body = document.getElementById("partnerStudentsBody");
+    const query = document.getElementById("partnerSearch")
+        .value.trim().toLowerCase();
+
+    const filtered = partnerStudentsCache.filter(student => {
+        const searchable = [
+            student.student_id,
+            student.name,
+            student.program,
+            student.year,
+            student.section
+        ].join(" ").toLowerCase();
+
+        return searchable.includes(query);
+    });
+
+    if (!filtered.length) {
+        body.innerHTML = `
+            <tr><td colspan="6" class="empty">
+                ${partnerStudentsCache.length
+                    ? "No partner records match your search."
+                    : "No partner records loaded. Retrieve records first."}
+            </td></tr>
+        `;
+        return;
     }
 
-    async function loadPartnerStudents() {
-        const body = document.getElementById("partnerStudentsBody");
-        body.innerHTML = '<tr><td colspan="6" class="empty">Connecting to partner API. This may take a moment...</td></tr>';
+    body.innerHTML = filtered.map(student => {
+        const encodedData = encodeURIComponent(JSON.stringify(student));
 
-        document.getElementById("partnerCount").textContent = "…";
+        return `
+            <tr>
+                <td>${escapeHTML(student.student_id)}</td>
+                <td>${escapeHTML(student.name)}</td>
+                <td>${escapeHTML(student.program)}</td>
+                <td>${escapeHTML(student.year)}</td>
+                <td>${escapeHTML(student.section)}</td>
+                <td>
+                    <button type="button" class="gold"
+                        data-student="${encodedData}"
+                        onclick="importPartnerStudent(this)">
+                        Save to My Database
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join("");
+}
 
-        try {
-            const result = await fetchJSON("/partner-records");
-            const students = result.students || [];
+async function loadPartnerStudents() {
+    const body = document.getElementById("partnerStudentsBody");
 
-            document.getElementById("partnerCount").textContent = students.length;
-            showPartnerMessage(result.message || "Partner records retrieved.");
+    body.innerHTML = `
+        <tr><td colspan="6" class="empty">
+            Connecting to partner API. This may take a moment...
+        </td></tr>
+    `;
 
-            if (students.length === 0) {
-                body.innerHTML = '<tr><td colspan="6" class="empty">The partner API returned no student records.</td></tr>';
-                return;
-            }
+    document.getElementById("partnerCount").textContent = "…";
 
-            body.innerHTML = students.map(student => {
-                const studentData = {
-                    student_id: student.student_id ?? student.id ?? "",
-                    name: student.name ?? student.student_name ?? "",
-                    program: student.program ?? "BSIT",
-                    year: Number(student.year ?? 1),
-                    section: student.section ?? "A"
-                };
+    try {
+        const result = await fetchJSON("/partner-records");
 
-                const safeData = JSON.stringify(studentData)
-                    .replace(/&/g, "&amp;")
-                    .replace(/</g, "&lt;")
-                    .replace(/>/g, "&gt;")
-                    .replace(/"/g, "&quot;");
-
-                return `
-                    <tr>
-                        <td>${escapeHTML(studentData.student_id)}</td>
-                        <td>${escapeHTML(studentData.name)}</td>
-                        <td>${escapeHTML(studentData.program)}</td>
-                        <td>${escapeHTML(studentData.year)}</td>
-                        <td>${escapeHTML(studentData.section)}</td>
-                        <td>
-                            <button type="button" class="gold"
-                                data-student="${safeData}"
-                                onclick="importPartnerStudent(this)">Save to My Database</button>
-                        </td>
-                    </tr>
-                `;
-            }).join("");
-        } catch (error) {
-            document.getElementById("partnerCount").textContent = "0";
-            body.innerHTML = `<tr><td colspan="6" class="empty">${escapeHTML(error.message)}</td></tr>`;
-            showPartnerMessage(
-                "Could not retrieve partner records. Check whether the partner API is running and has the /api/students endpoint. " + error.message,
-                "error"
-            );
+        if (!Array.isArray(result.students)) {
+            throw new Error("The partner response does not contain a students list.");
         }
+
+        partnerStudentsCache = result.students.map(normalizePartnerStudent);
+
+        document.getElementById("partnerCount").textContent =
+            partnerStudentsCache.length;
+
+        showPartnerMessage(
+            result.message || "Partner records retrieved successfully.",
+            "success"
+        );
+
+        renderPartnerStudents();
+        setConnectionStatus("partnerApiStatus", true, "Online");
+
+        addActivity(
+            "Partner records retrieved",
+            `${partnerStudentsCache.length} record(s) returned`
+        );
+
+    } catch (error) {
+        partnerStudentsCache = [];
+        document.getElementById("partnerCount").textContent = "0";
+
+        renderPartnerStudents();
+        setConnectionStatus("partnerApiStatus", false, "Offline");
+
+        showPartnerMessage(
+            "Could not retrieve partner records. Check the partner API, its /api/students endpoint, and your /partner-records route. " +
+            error.message,
+            "error"
+        );
+
+        addActivity("Partner retrieval failed", error.message);
+    }
+}
+
+async function importPartnerStudent(button) {
+    let student;
+
+    try {
+        student = JSON.parse(
+            decodeURIComponent(button.dataset.student)
+        );
+    } catch {
+        showMessage("Unable to read the selected partner record.", "error");
+        return;
     }
 
-    async function importPartnerStudent(button) {
-        let student;
+    if (
+        !student.student_id ||
+        !student.name ||
+        !PROGRAMS.includes(student.program) ||
+        !Number.isInteger(student.year) ||
+        student.year < 1 ||
+        student.year > 6 ||
+        !student.section
+    ) {
+        showMessage(
+            "This partner record is missing required fields or contains unsupported values.",
+            "error"
+        );
 
-        try {
-            student = JSON.parse(button.dataset.student);
-        } catch {
-            showMessage("Unable to read the selected partner record.", "error");
-            return;
-        }
+        recordExchange(
+            "Import",
+            student.student_id || "Unknown",
+            false,
+            "Invalid or incomplete student data"
+        );
 
-        if (!student.student_id || !student.name ||
-            !PROGRAMS.includes(student.program) ||
-            !Number.isInteger(student.year) ||
-            student.year < 1 || student.year > 6 ||
-            !student.section) {
-            showMessage(
-                "This partner record is missing required fields or has an unsupported program. Check the partner API's student data.",
-                "error"
-            );
-            return;
-        }
-
-        button.disabled = true;
-
-        try {
-            const result = await fetchJSON("/import-student", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(student)
-            });
-
-            showMessage(result.message || "Partner student imported successfully.");
-            await loadLocalStudents();
-        } catch (error) {
-            showMessage(error.message, "error");
-        } finally {
-            button.disabled = false;
-        }
+        return;
     }
 
-    document.getElementById("sendStudentForm").addEventListener("submit", async function (event) {
+    button.disabled = true;
+
+    try {
+        const result = await fetchJSON("/import-student", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(student)
+        });
+
+        showMessage(
+            result.message || "Partner student imported successfully."
+        );
+
+        addActivity("Partner student imported", student.name);
+
+        recordExchange("Import", student.student_id, true);
+
+        await loadLocalStudents();
+
+    } catch (error) {
+        showMessage(error.message, "error");
+
+        addActivity("Partner import failed", error.message);
+
+        recordExchange(
+            "Import",
+            student.student_id,
+            false,
+            error.message
+        );
+
+    } finally {
+        button.disabled = false;
+    }
+}
+
+document.getElementById("sendStudentForm")
+    .addEventListener("submit", async function(event) {
         event.preventDefault();
 
         const student = {
@@ -836,17 +1806,38 @@
                 body: JSON.stringify(student)
             });
 
-            showMessage(result.message || "Student sent to partner API.");
+            showMessage(
+                result.message || "Student sent to partner API."
+            );
+
+            addActivity("Student sent to partner API", student.name);
+
+            recordExchange("Send", student.student_id, true);
+
             this.reset();
+
             document.getElementById("send_program").value = "BSIT";
             document.getElementById("send_year").value = "3";
+
         } catch (error) {
             showMessage(error.message, "error");
+
+            addActivity("Partner send failed", error.message);
+
+            recordExchange(
+                "Send",
+                student.student_id,
+                false,
+                error.message
+            );
         }
     });
-    
-    // Load the local database records when the page opens.
-    loadLocalStudents();
+
+// Initial dashboard setup.
+addActivity("Dashboard opened", "Student Data Exchange System");
+loadLocalStudents();
+checkConnections();
 </script>
+
 </body>
 </html>
