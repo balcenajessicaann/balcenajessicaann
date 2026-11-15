@@ -6,7 +6,7 @@ from flask import Flask, jsonify, request, render_template
 app = Flask(__name__)
 
 DATABASE = "students.db"
-CLASSMATE_API_URL = "https://kleinjasperagrabio.onrender.com"
+CLASSMATE_API_URL = "http://13.213.166.139"
 REQUEST_TIMEOUT = 60
 
 PROGRAMS = {"BSIT", "BSED", "BSA", "BSHM", "BSOffAd"}
